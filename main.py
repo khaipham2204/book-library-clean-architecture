@@ -1,10 +1,20 @@
 from use_cases.library_service import LibraryService
 from repository.book_repository import BookRepository
 from interface_adapters.menu import Menu
+from interface_adapters.notifier import ConsoleNotifier, LoggerNotifier
+
 
 def main():
+
+    console = ConsoleNotifier()
+    logger = LoggerNotifier()
+
     repository = BookRepository()
     service = LibraryService(repository)
+    # Attach observers:
+    service.add_observer(console)
+    service.add_observer(logger)
+    service.notify_all("LibraryService")
     menu = Menu(service)
     menu.display()
 

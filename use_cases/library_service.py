@@ -1,12 +1,20 @@
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from repository.book_repository import BookRepository
 from strategy.search_strategy import SearchStrategy
 from entities.book import Book
+from entities.observer import Observer
 
 @dataclass
 class LibraryService:
     repository: BookRepository
+    _observers: list[Observer] = field(default_factory=list)
+
+    def add_observer(self, observer: Observer):
+        self._observers.append(observer)
+
+    def notify_all(self, message: str):
+        list(map(lambda observer: observer.update(message),self._observers))
 
     def add_book(self, book: Book):
         self.repository.add(book)
