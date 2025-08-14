@@ -19,6 +19,9 @@ class LibraryService:
     def add_book(self, book: Book):
         self.repository.add(book)
 
+    def add_book_bulk(self, books: list[Book]):
+        self.repository.add_bulk(books)
+
     def remove_book(self, title: str):
         self.repository.remove(title)
 

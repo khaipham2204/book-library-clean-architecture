@@ -10,6 +10,9 @@ class BookRepository:
     def add(self, book: Book):
         self._book.append(book)
 
+    def add_bulk(self, books: list[Book]):
+        list(map(lambda book: self.add(book),books))
+
     def remove(self, title: str):
         self._book = list(b for b in self._book if b.title != title)
 

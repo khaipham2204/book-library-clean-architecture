@@ -14,6 +14,7 @@ class Menu:
             print("3. Remove book")
             print("4. Search by title")
             print("5. Search by author")
+            print("6. Load books from folder")
             print("0. Exit")
 
             choice = input("Choose an option: ")
@@ -27,8 +28,12 @@ class Menu:
                 self.search_by_title()
             elif choice == "5":
                 self.search_by_author()
+            elif choice == "6":
+                self.load_books_from_folder()
+
             elif choice == "0":
                 break
+
     def list_books(self,):
         books = self.service.list_books()
         if not books:
@@ -58,3 +63,10 @@ class Menu:
         result = self.service.search_books(AuthorSearch(keyword))
         for book in result:
             print(book)
+
+    def load_books_from_folder(self):
+        from utils.file_loader import load_books_from_folder
+        folder = input("Enter folder path: ").strip() or "data"
+        books = load_books_from_folder(folder)
+        self.service.add_book_bulk(books)
+
