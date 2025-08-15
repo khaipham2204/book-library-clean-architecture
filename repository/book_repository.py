@@ -1,7 +1,9 @@
 from __future__ import annotations
+import asyncio
+
 from dataclasses import dataclass, field
 from entities.book import Book
-from strategy.search_strategy import SearchStrategy
+from strategy.search_strategy import SearchStrategy, AsyncSearchStrategy
 
 @dataclass
 class BookRepository:
@@ -21,4 +23,18 @@ class BookRepository:
 
     def find_by(self, strategy: SearchStrategy):
         return strategy.filter(self._book)
+
+    async def async_search_books(self, strategies: list[AsyncSearchStrategy]) -> list[Book]:
+        tasks: list = [ strategy.filter(self.get_all())  for strategy in strategies ]
+        results = await asyncio.gather(*tasks)
+        flat = [book for sublist in results for book in sublist]
+        seen = set()
+        uniques_books = list()
+        for book in flat:
+            key =  (book.title.lower(), book.author.lower())
+            if key not in seen:
+                seen.add(key)
+                uniques_books.append(book)
+        return uniques_books
+
 

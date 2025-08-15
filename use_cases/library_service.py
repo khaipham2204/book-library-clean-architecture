@@ -1,7 +1,7 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
 from repository.book_repository import BookRepository
-from strategy.search_strategy import SearchStrategy
+from strategy.search_strategy import SearchStrategy, AsyncSearchStrategy
 from entities.book import Book
 from entities.observer import Observer
 
@@ -31,3 +31,5 @@ class LibraryService:
     def search_books(self, strategy: SearchStrategy):
         return self.repository.find_by(strategy)
 
+    async def async_search_books(self, strategies: list[AsyncSearchStrategy]):
+        return await self.repository.async_search_books(strategies)

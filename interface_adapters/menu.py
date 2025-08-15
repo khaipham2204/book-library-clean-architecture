@@ -1,12 +1,13 @@
+import asyncio
 from dataclasses import dataclass
-from strategy.search_strategy import TitleSearch, AuthorSearch
+from strategy.search_strategy import TitleSearch, AuthorSearch, AsyncTitleSearch, AsyncAuthorSearch
 from use_cases.library_service import LibraryService
 
 @dataclass
 class Menu:
     service: LibraryService
 
-    def display(self):
+    async def display(self):
         while True:
             print("\n--- Book Library ---")
             print("1. List all books")
@@ -15,6 +16,7 @@ class Menu:
             print("4. Search by title")
             print("5. Search by author")
             print("6. Load books from folder")
+            print("7. Async search (title + author)")
             print("0. Exit")
 
             choice = input("Choose an option: ")
@@ -30,7 +32,8 @@ class Menu:
                 self.search_by_author()
             elif choice == "6":
                 self.load_books_from_folder()
-
+            elif choice == "7":
+                await self.search_combine_async()
             elif choice == "0":
                 break
 
@@ -63,6 +66,13 @@ class Menu:
         result = self.service.search_books(AuthorSearch(keyword))
         for book in result:
             print(book)
+
+    async def search_combine_async(self,):
+        keyword = input("Search keyword (will check title & author): ")
+        strategies = [AsyncTitleSearch(keyword), AsyncAuthorSearch(keyword)]
+        results = await self.service.async_search_books(strategies)
+        list(map(lambda book: print(book) ,results))
+
 
     def load_books_from_folder(self):
         from utils.file_loader import load_books_from_folder
