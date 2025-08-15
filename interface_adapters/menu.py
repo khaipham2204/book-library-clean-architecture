@@ -17,6 +17,7 @@ class Menu:
             print("5. Search by author")
             print("6. Load books from folder")
             print("7. Async search (title + author)")
+            print("8. Load books from folder (async)")
             print("0. Exit")
 
             choice = input("Choose an option: ")
@@ -34,6 +35,8 @@ class Menu:
                 self.load_books_from_folder()
             elif choice == "7":
                 await self.search_combine_async()
+            elif choice == "8":
+                await self.async_load_books_from_folder()
             elif choice == "0":
                 break
 
@@ -79,4 +82,11 @@ class Menu:
         folder = input("Enter folder path: ").strip() or "data"
         books = load_books_from_folder(folder)
         self.service.add_book_bulk(books)
+
+    async def async_load_books_from_folder(self):
+        from utils.async_file_loader import async_load_books_from_folder
+        folder = input("Enter folder path: ").strip() or "data"
+        books = await async_load_books_from_folder(folder)
+        self.service.add_book_bulk(books)
+
 
