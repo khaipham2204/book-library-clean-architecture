@@ -3,10 +3,12 @@ import asyncio
 
 from dataclasses import dataclass, field
 from entities.book import Book
+from entities.indexer import AsyncBookIndexer
 from strategy.search_strategy import SearchStrategy, AsyncSearchStrategy
 
 @dataclass
 class BookRepository:
+    indexer: AsyncBookIndexer | None
     _book: list[Book] = field(default_factory=list)
 
     def add(self, book: Book):
@@ -37,4 +39,11 @@ class BookRepository:
                 uniques_books.append(book)
         return uniques_books
 
+    def book_indexer(self):
+        self.indexer.index_files(self._book)
+
+    async def search_engine(self, keyword: str):
+        word = keyword.lower()
+        matches = self.indexer.index.get(word, set())
+        return {path: self.indexer.content_map[path] for path in matches}
 

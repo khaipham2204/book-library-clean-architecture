@@ -4,6 +4,7 @@ from repository.book_repository import BookRepository
 from strategy.search_strategy import SearchStrategy, AsyncSearchStrategy
 from entities.book import Book
 from entities.observer import Observer
+from entities.indexer import AsyncBookIndexer
 
 @dataclass
 class LibraryService:
@@ -33,3 +34,10 @@ class LibraryService:
 
     async def async_search_books(self, strategies: list[AsyncSearchStrategy]):
         return await self.repository.async_search_books(strategies)
+
+    async def search_engine(self, indexer: AsyncBookIndexer):
+        return await self.repository.async_book_indexer(indexer)
+
+    def book_indexer(self,):
+        self.repository.book_indexer()
+

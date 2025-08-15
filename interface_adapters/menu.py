@@ -18,6 +18,8 @@ class Menu:
             print("6. Load books from folder")
             print("7. Async search (title + author)")
             print("8. Load books from folder (async)")
+            print("9. Book Indexer")
+            print("10. Search Engine")
             print("0. Exit")
 
             choice = input("Choose an option: ")
@@ -37,6 +39,10 @@ class Menu:
                 await self.search_combine_async()
             elif choice == "8":
                 await self.async_load_books_from_folder()
+            elif choice == "9":
+                self.book_indexer()
+            elif choice == "10":
+                self.search_engine()
             elif choice == "0":
                 break
 
@@ -89,4 +95,12 @@ class Menu:
         books = await async_load_books_from_folder(folder)
         self.service.add_book_bulk(books)
 
+    def book_indexer(self):
+        self.service.book_indexer()
+
+    async def search_engine(self, keyword: str):
+        results = await self.service.search_engine(keyword)
+        print(f"\nResults for '{keyword}':")
+        for path, content in results.items():
+            print(f"\n--- {path} ---\n{content[:300]}...")
 
